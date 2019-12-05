@@ -20,8 +20,33 @@ mboot:
     dd mboot                    ; Location of the descriptor
     dd code                     ; Start of the kernel '.text' (code) section
     dd bss                      ; End of the kernel '.data' section
-    dd end                      ; 
-    dd start                    ;
+    dd end                      ; end od kernel
+    dd start                    ; kernel entry point(initial EIP)
 
 [GLOBAL start]
-[EXTERN main]
+[GLOBAL glb_mboot_ptr]
+[EXTERN kern_entry]
+
+start:
+    ; execute kernel
+    cli                         ; disable interrupts
+    
+    mov esp, STACK_TOP          ; 设置内核栈地址
+    mov ebp, 0                  ; 栈指针修改为0
+    and esp, 0FFFFFFF0H         ; 栈地址按照 16 字节对齐
+    mov [glb_mboot_ptr], ebx    ; 将 ebx 中存储的指针存入全局变量
+
+    call kern_entry             ; call our main() function
+                                    ; executing whatever rubbish is in the memory after our kernel
+stop:
+    hlt
+    jmp stop
+;----------------------------------------
+
+section .bss
+stack:
+    resb 32768
+glb_mboot_ptr:
+    resb 4
+
+STACK_TOP equ $-stack-1     ; 内核栈顶 , $ 符号表示当前地址
