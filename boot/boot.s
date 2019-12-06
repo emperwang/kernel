@@ -7,21 +7,11 @@ MBOOT_CHECKSUM      equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 
 [BITS 32]                       ; All instructions should be 32-bit
 
-[GLOBAL mboot]                  ; make 'mboot' accessible from C
-[EXTERN code]                   ; start of the '.text' section
-[EXTERN bss]                    ; start of the '.bss'  section
-[EXTERN end]                    ; End of the last loadable section
+section .text
 
-mboot:
-    dd MBOOT_HEADER_MAGIC       ; GRUB will search for this value on each 4-byte boundary in your kernel file
-    dd MBOOT_HEADER_FLAGS       ; how GRUB should load your file / settings
-    dd MBOOT_CHECKSUM           ; To ensure that the above values are correct
-    
-    dd mboot                    ; Location of the descriptor
-    dd code                     ; Start of the kernel '.text' (code) section
-    dd bss                      ; End of the kernel '.data' section
-    dd end                      ; end od kernel
-    dd start                    ; kernel entry point(initial EIP)
+dd MBOOT_HEADER_MAGIC       ; GRUB will search for this value on each 4-byte boundary in your kernel file
+dd MBOOT_HEADER_FLAGS       ; how GRUB should load your file / settings
+dd MBOOT_CHECKSUM           ; To ensure that the above values are correct
 
 [GLOBAL start]
 [GLOBAL glb_mboot_ptr]

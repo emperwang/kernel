@@ -1,5 +1,5 @@
-#ifndef INCLUDE_TYPES_H
-#define INCLUDE_TYPES_H
+#ifndef INCLUDE_TYPES_H_
+#define INCLUDE_TYPES_H_
 
 #ifndef NULL
     #define NULL 0

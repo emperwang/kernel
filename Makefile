@@ -37,6 +37,7 @@ update_image:
 	umount /mnt/kernel
 
 .PHONY:mount_image
+mount_image:
 	mount floppy.img  /mnt/kernel
 
 .PHONY:umount_image
